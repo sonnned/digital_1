@@ -1,5 +1,4 @@
 *xor
-
 Mx1 nx 2  3 3 P1 L=180nm W=20um
 Mx2 nx 2  6 6 N1 L=180nm W=10um
 
@@ -101,15 +100,17 @@ cload 1 6 500f
 .tran 3ps 80.1ns
 
  .control
-        run
-        write xor1.raw
-        meas tran iave INTEG i(vsupply) from=0ns to=80.1ns
-        let power = iave * 1.5 / 80.1ns  
-  *how to access psu from here?
-        print power
-	plot V(2) V(4)
-        plot v(1)
-        plot i(vsupply)
+      run
+      write xor.raw
+      meas tran iave INTEG i(vsupply) from=0ns to=80.1ns
+      let power = iave * 1.5 / 80.1ns  
+      *how to access psu from here?
+      set color0 = white, color1 = black, color2 = purple, color3 = orange
+      set xbrushwidth = 4
+      print power
+      plot V(2) V(4)
+      plot v(1)
+      plot i(vsupply)
  .endc
 	
 

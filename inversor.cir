@@ -21,9 +21,9 @@ vdc0 vss1 6 dc 0V
         meas tran iave INTEG i(vsupply) from=0ns to=20.1ns
         let power = -iave * 1.5 / 20.1ns ; how to access psu from here?
         print power
-        set color0 = white, color1 = black, color2 = purple, color3 = orange
+        set color0 = white, color1 = black, color2 = purple, color3 = orange, color4 = red, color5 = red, color6 = red
         set xbrushwidth = 4
-	plot V(2) V(1) title "Input - Output"
+	plot V(2) V(1) 0.75 0.15 1.35 title "Input - Output"
         * plot V(1) title "Output"
         plot i(vsupply) title "Supply Current"
  .endc

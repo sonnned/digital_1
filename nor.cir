@@ -88,15 +88,17 @@ cload 1 6 500f
 .tran 3ps 80.1ns
 
  .control
-        run
-        write nor.raw
-        meas tran iave INTEG i(vsupply) from=0ns to=80.1ns
-        let power = iave * 1.5 / 80.1ns  
-  *how to access psu from here?
-        print power
-        plot V(2) V(4)
-        plot v(1)
-        plot i(vsupply)
+      run
+      write nor.raw
+      meas tran iave INTEG i(vsupply) from=0ns to=80.1ns
+      let power = iave * 1.5 / 80.1ns
+      *how to access psu from here?
+      set color0 = white, color1 = black, color2 = purple, color3 = orange, color4 = red, color5 = red, color6 = red
+      set xbrushwidth = 4
+      print power
+      plot V(2) V(4) 0.75 0.15 1.35
+      plot v(1)
+      plot i(vsupply)
  .endc
 	
 
