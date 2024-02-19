@@ -1,16 +1,38 @@
-*nor
-M1 5 2 3 3 P1 L=180nm W=20um
-M2 1 4 5 5 P1 L=180nm W=20um
-M3 1 4 6 6 N1 L=180nm W=10um
-M4 1 2 6 6 N1 L=180nm W=10um
+* CMOS Inverter Power Analysis 180nm   Voltaje 1.5V
 
-vsupply 3 0 1.5V
-VSS 6 0 0V
-VA 2 0 pulse(0 1.5 20ns 50ps 50ps 20ns 40.1ns)
-VB 4 0 pulse(0 1.5 40.05ns 50ps 50ps 40.05ns 80.1ns)
-cload 1 6 500f
+.param psu = 1.5 
+vsupply 3 0 {psu}
+vgnd 6 0 0V
+VA 2 0 pulse(0 1.5 10ns 50ps 50ps 10ns 20.1ns)
 
-.MODEL N1 NMOS (                                LEVEL   = 49
+M1 1 2 3 3 P1 L=180nm W=20um
+M2 1 2 6 6 N1 L=180nm W=10um
+
+Cload 1 vss1 200f
+vdc0 vss1 6 dc 0V
+
+.options method=trap reltol=0.1m
+.tran 10p 40ns
+.save all @vsupply[p]
+
+ .control
+        run
+        write inversor.raw
+        meas tran iave INTEG i(vsupply) from=0ns to=20.1ns
+        let power = -iave * 1.5 / 20.1ns ; how to access psu from here?
+        print power
+        set color0 = white, color1 = black, color2 = purple, color3 = orange
+        set xbrushwidth = 4
+	plot V(2) V(1) title "Input - Output"
+        * plot V(1) title "Output"
+        plot i(vsupply) title "Supply Current"
+ .endc
+
+* Measure Area Under the Curve of i(vdc0)
+.measure tran idt  INTEG i(vdc0) from=4ns to=20.1ns
+* Multiply 'idt' by Vdd to get the total power idt=-4.19951e-16 (power = 12e-16 watts)
+
+.MODEL N1  NMOS (                                LEVEL   = 49
 +VERSION = 3.1            TNOM    = 27             TOX     = 4.5E-9
 +XJ      = 1E-7           NCH     = 2.3549E17      VTH0    = 0.3026413
 +K1      = 0.4866067      K2      = 1.715373E-3    K3      = 1E-3
@@ -47,7 +69,7 @@ cload 1 6 500f
 +PUB     = 0              PVSAT   = 958.2202204    PETA0   = 6.045336E-5
 +PKETA   = 2.515297E-3     )
 *
-.MODEL P1 PMOS (                                LEVEL   = 49
+.MODEL P1    PMOS (                                LEVEL   = 49
 +VERSION = 3.1            TNOM    = 27             TOX     = 4.5E-9
 +XJ      = 1E-7           NCH     = 4.1589E17      VTH0    = -0.3913037
 +K1      = 0.553856       K2      = 0.0225982      K3      = 0
@@ -83,21 +105,8 @@ cload 1 6 500f
 +LKETA   = -0.0113269     PU0     = -0.499965      PUA     = 4.03341E-12
 +PUB     = 1E-21          PVSAT   = -50            PETA0   = 9.968409E-5
 +PKETA   = -2.188083E-3    )
-*
 
-.tran 3ps 80.1ns
 
- .control
-        run
-        write nor1.raw
-        meas tran iave INTEG i(vsupply) from=0ns to=80.1ns
-        let power = iave * 1.5 / 80.1ns  
-  *how to access psu from here?
-        print power
-	plot V(2) V(4)
-        plot v(1)
-        plot i(vsupply)
- .endc
-	
+.END
 
-.end
+

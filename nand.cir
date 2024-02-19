@@ -85,16 +85,18 @@ cload 1 6 500f
 +PKETA   = -2.188083E-3    )
 *
 
-.tran 3ps 160.1ns
+.tran 3ps 80.1ns
 
  .control
         run
         write nand1.raw
         meas tran iave INTEG i(vsupply) from=0ns to=80.1ns
         let power = iave * 1.5 / 80.1ns  
-  *how to access psu from here?
+        *how to access psu from here?
         print power
-	plot V(2) V(4)
+        set color0 = white, color1 = black, color2 = purple, color3 = orange
+        set xbrushwidth = 4
+        plot V(2) V(4)
         plot v(1)
         plot i(vsupply)
  .endc

@@ -1,8 +1,8 @@
-*and
-M1 1 2 3 3 P1 L=180nm W=20um
-M2 1 4 3 3 P1 L=180nm W=20um
-M3 1 4 5 5 N1 L=180nm W=10um
-M4 5 2 6 6 N1 L=180nm W=10um
+*or
+M1 5 2 3 3 P1 L=180nm W=20um
+M2 1 4 5 5 P1 L=180nm W=20um
+M3 1 4 6 6 N1 L=180nm W=10um
+M4 1 2 6 6 N1 L=180nm W=10um
 M5 7 1 3 3 P1 L=180nm W=20um
 M6 7 1 6 6 N1 L=180nm W=10um
 
@@ -20,7 +20,7 @@ cload 7 6 500f
 +DVT0W   = 0              DVT1W   = 0              DVT2W   = 0
 +DVT0    = 0.6401014      DVT1    = 0.4188964      DVT2    = -0.077387
 +U0      = 267.977406     UA      = -1.66677E-9    UB      = 3.20343E-18
-+UC      = 1.251447E-10   VSAT    = 1.228787E5     A0      = 1.8623916
++UC    L=180nm W=10um  = 1.251447E-10   VSAT    = 1.228787E5     A0      = 1.8623916
 +AGS     = 0.4657819      B0      = 2.438085E-7    B1      = 1.667495E-6
 +KETA    = -9.87245E-3    A1      = 3.464443E-4    A2      = 0.7083117
 +RDSW    = 105            PRWG    = 0.3710936      PRWB    = -0.1986444
@@ -77,7 +77,7 @@ cload 7 6 500f
 +LL      = 0              LLN     = 1              LW      = 0
 +LWN     = 1              LWL     = 0              CAPMOD  = 2
 +XPART   = 0.5            CGDO    = 4.34E-10       CGSO    = 4.34E-10
-+CGBO    = 1E-12          CJ      = 1.174289E-3    PB      = 0.8275846
++CGBO    = 1E-12L=180nm W=10um          CJ      = 1.174289E-3    PB      = 0.8275846
 +MJ      = 0.4115852      CJSW    = 1.329615E-10   PBSW    = 0.8
 +MJSW    = 0.1002729      CJSWG   = 4.22E-10       PBSWG   = 0.8
 +MJSWG   = 0.1002729      CF      = 0              PVTH0   = 8.424172E-4
@@ -87,16 +87,18 @@ cload 7 6 500f
 +PKETA   = -2.188083E-3    )
 *
 
-.tran 3ps 80.1ns
+.tran 3ps 160.1ns
 
  .control
         run
-        write and1.raw
+        write or1.raw
         meas tran iave INTEG i(vsupply) from=0ns to=80.1ns
-        let power = iave * 1.5 / 80.1ns  
-  *how to access psu from here?
+        let power = -iave * 1.5 / 80.1ns  
+        *how to access psu from here?
+        set color0 = white, color1 = black, color2 = purple, color3 = orange
+        set xbrushwidth = 4
         print power
-	plot V(2) V(4)
+        plot V(2) V(7)
         plot v(7)
         plot i(vsupply)
  .endc
