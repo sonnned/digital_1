@@ -89,7 +89,7 @@ cload 1 6 500f
 
  .control
         run
-        write nand1.raw
+        write nand.raw
         meas tran iave INTEG i(vsupply) from=0ns to=80.1ns
         let power = iave * 1.5 / 80.1ns  
         *how to access psu from here?
