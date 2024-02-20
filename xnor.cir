@@ -1,26 +1,44 @@
 *xor
-Mx1 nx 2  3 3 P1 L=180nm W=20um
-Mx2 nx 2  6 6 N1 L=180nm W=10um
+* M1 5 2 3 3 P1 L=180nm W=20um
+* M2 5 4 3 3 P1 L=180nm W=20um
+* M3 7 10 5 5 P1 L=180nm W=20um
+* M4 7 11 5 5 P1 L=180nm W=20um
 
-My1 ny 4  3 3 P1 L=180nm W=20um
-My2 ny 4  6 6 N1 L=180nm W=10um
+* M5 7 2 9 9 N1 L=180nm W=10um
+* M6 7 10 8 8 N1 L=180nm W=10um
+* M7 9 4 6 6 N1 L=180nm W=10um
+* M8 8 11 6 6 N1 L=180nm W=10um
 
-M1  5  4  3 3 P1 L=180nm W=20um
-M2  1  nx 5 5 P1 L=180nm W=20um
-M3  7  ny 3 3 P1 L=180nm W=20um
-M4  1  2  7 7 P1 L=180nm W=20um
-M5  1  2  8 8 N1 L=180nm W=10um
-M6  1  ny 8 8 N1 L=180nm W=10um
-M7  8  nx 6 6 N1 L=180nm W=10um
-M8  8  4  6 6 N1 L=180nm W=10um 
+* M9 10 2 3 3 P1 L=180nm W=20um
+* M10 10 2 6 6 N1 L=180nm W=10um
 
+* M11 11 4 3 3 P1 L=180nm W=20um
+* M12 11 4 6 6 N1 L=180nm W=10um
 
+M1 5 2 3 3 P1 L=180nm W=20um
+M2 5 4 3 3 P1 L=180nm W=20um
+M3 7 10 5 5 P1 L=180nm W=20um
+M4 7 11 5 5 P1 L=180nm W=20um
+
+M5 7 2 9 9 N1 L=180nm W=10um
+M6 7 10 8 8 N1 L=180nm W=10um
+M7 9 4 6 6 N1 L=180nm W=10um
+M8 8 11 6 6 N1 L=180nm W=10um
+
+M9 10 2 3 3 P1 L=180nm W=20um
+M10 10 2 6 6 N1 L=180nm W=10um
+
+M11 11 4 3 3 P1 L=180nm W=20um
+M12 11 4 6 6 N1 L=180nm W=10um
+
+M13 12 7 3 3 P1 L=180nm W=20um
+M14 12 7 6 6 N1 L=180nm W=10um
 
 vsupply 3 0 1.5V
 VSS 6 0 0V
 VA 2 0 pulse(0 1.5 20ns 50ps 50ps 20ns 40.1ns)
 VB 4 0 pulse(0 1.5 40.05ns 50ps 50ps 40.05ns 80.1ns)
-cload 1 6 500f
+cload 12 6 500f
 
 .MODEL N1 NMOS (                                LEVEL   = 49
 +VERSION = 3.1            TNOM    = 27             TOX     = 4.5E-9
@@ -97,20 +115,20 @@ cload 1 6 500f
 +PKETA   = -2.188083E-3    )
 *
 
-.tran 3ps 80.1ns
+.tran 3ps 160.1ns
 
  .control
-     run
-     write xor.raw
-     meas tran iave INTEG i(vsupply) from=0ns to=80.1ns
-     let power = -iave * 1.5 / 80.1ns  
-     *how to access psu from here?
-     set color0 = white, color1 = black, color2 = purple, color3 = orange, color4 = red, color5 = red, color6 = red
-     set xbrushwidth = 4
-     print power
-     plot V(2) V(4) 0.75 0.15 1.35
-     plot v(1)
-     plot i(vsupply)
+       run
+       write xnor.raw
+       meas tran iave INTEG i(vsupply) from=0ns to=80.1ns
+       let power = -iave * 1.5 / 80.1ns  
+       *how to access psu from here?
+       print power
+       set color0 = white, color1 = black, color2 = purple, color3 = orange, color4 = red, color5 = red, color6 = red
+       set xbrushwidth = 4
+       plot V(2) V(12) 0.75 0.15 1.35
+       plot v(12)
+       plot i(vsupply)
  .endc
 	
 
