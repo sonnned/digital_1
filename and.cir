@@ -98,7 +98,7 @@ cload 7 6 500f
        print power
        set color0 = white, color1 = black, color2 = purple, color3 = orange, color4 = red, color5 = red, color6 = red
        set xbrushwidth = 4
-       plot V(2) V(4) 0.75 0.15 1.35
+       plot V(2) V(4) ;0.75 0.15 1.35
        plot v(7)
        plot i(vsupply)
  .endc

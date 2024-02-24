@@ -115,7 +115,7 @@ cload 12 6 500f
 +PKETA   = -2.188083E-3    )
 *
 
-.tran 3ps 160.1ns
+.tran 3ps 80.1ns
 
  .control
        run
@@ -126,7 +126,7 @@ cload 12 6 500f
        print power
        set color0 = white, color1 = black, color2 = purple, color3 = orange, color4 = red, color5 = red, color6 = red
        set xbrushwidth = 4
-       plot V(2) V(12) 0.75 0.15 1.35
+       plot V(2) V(4) ;0.75 0.15 1.35
        plot v(12)
        plot i(vsupply)
  .endc
