@@ -3,9 +3,8 @@
 .param psu = 1.5
 vsupply 3 0 {psu}
 VA 11 0 pulse(0 {psu} 40.15ns 50ps 50ps 40.15ns 80.4ns)
-VC 17 0 pulse(0 {psu} 10ns 50ps 50ps 10ns 20.1ns)
 VB 10 0 pulse(0 {psu} 20.05ns 50ps 50ps 20.05ns 40.2ns)
-
+VC 17 0 pulse(0 {psu} 10ns 50ps 50ps 10ns 20.1ns)
 * VA 17 0 pulse(0 {psu} 10ns 50ps 50ps 10ns 20.1ns)
 * VB 10 0 pulse(0 {psu} 20.05ns 50ps 50ps 20.05ns 40.2ns)
 * VC 11 0 pulse(0 {psu} 40.15ns 50ps 50ps 40.15ns 80.4ns)
@@ -35,15 +34,15 @@ M2 4 8 0 0 N1 L=180nm W=10um
 .ENDS INV2
 
 .SUBCKT FUNCION 11 10 17 4 3
-X1 10 20 3 INV2
-X2 20 17 31 3 NAND2
+X1 17 cn 3 INV2
+X2 10 11 abn 3 NAND2
+X3 cn abn 23 3 NAND2
 * X3 31 32 3 INV2
 
-X4 17 33 3 INV2
-X5 11 10 33 34 3 NAND3
+X5 17 10 cbn 3 NAND2
 * X6 34 35 3 INV2
 
-X7 31 34 4 3 NAND2
+X7 cbn 23 4 3 NAND2
 * X8 36 4 3 INV2
 .ENDS FUNCION
 
@@ -71,12 +70,13 @@ X7 31 34 4 3 NAND2
 X20 11 10 17 7 3 FUNCION
 
 .options method=trap reltol=0.1m
-.tran 10p 80.2ns
+.tran 10p 80.4ns
 .save all @vsupply[p]
 
 .control
   run        
-	* plot V(17) V(10) V(11) V(12) V(13) V(14)
+	 plot V(17) V(10) V(11) 
+  
 	* plot V(27) V(18) V(15) V(16)
   plot V(7)
 .endc
