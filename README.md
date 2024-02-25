@@ -1,1 +1,1 @@
-<a href="https://colab.research.google.com/drive/1X3xuSAM6_xnHRB19QpYRPvpaamjCcbHl#scrollTo=wF5lELbZymPl" target="__blank">Colab</a>
+<a href="https://docs.google.com/document/d/1Ts-SQvwDmFNYo5-pdbX3KANzksuDbGSZLMHOuAHM-Wk/edit?usp=sharing" target="__blank">Documento</a>
