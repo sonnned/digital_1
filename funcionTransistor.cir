@@ -1,29 +1,69 @@
 *funcion
-M1 10 5 3 3 P1 L=180nm W=20um
-M2 10 8 3 3 P1 L=180nm W=20um
+M1 11 8 3 3 P1 L=180nm W=20um
+M2 11 4 3 3 P1 L=180nm W=20um
+M3 11 10 3 3 P1 L=180nm W=20um
 
-M3 7 2 10 10 P1 L=180nm W=20um
-M4 7 4 10 10 P1 L=180nm W=20um
-M5 7 9 10 10 P1 L=180nm W=20um
+M4 12 2 11 11 P1 L=180nm W=20um
+M5 12 4 11 11 P1 L=180nm W=20um
+M6 12 10 11 11 P1 L=180nm W=20um
 
-M6 7 2 11 11 N1 L=180nm W=10um
-M7 7 5 12 12 N1 L=180nm W=10um
-M8 11 4 13 13 N1 L=180nm W=10um
-M9 12 8 6 6 N1 L=180nm W=10um
-M10 13 9 6 6 N1 L=180nm W=10um
+M7 13 2 12 12 P1 L=180nm W=20um
+M8 13 9 12 12 P1 L=180nm W=20um
+M9 13 5 12 12 P1 L=180nm W=20um
 
-M11 8 4 3 3 P1 L=180nm W=20um
-M12 8 4 6 6 N1 L=180nm W=10um
+M10 30 8 13 13 P1 L=180nm W=20um
+M11 30 5 13 13 P1 L=180nm W=20um
 
-M13 9 5 3 3 P1 L=180nm W=20um
-M14 9 5 6 6 N1 L=180nm W=10um
+
+M12 30 8 14 14 N1 L=180nm W=10um
+M13 14 5 6 6 N1 L=180nm W=10um
+
+M14 30 2 15 15 N1 L=180nm W=10um
+M15 15 9 16 16 N1 L=180nm W=10um
+M16 16 5 6 6 N1 L=180nm W=10um
+
+M17 30 2 17 17 N1 L=180nm W=10um
+M18 17 4 18 18 N1 L=180nm W=10um
+M19 18 10 6 6 N1 L=180nm W=10um
+
+M20 30 8 19 19 N1 L=180nm W=10um
+M21 19 4 20 20 N1 L=180nm W=10um
+M22 20 10 6 6 N1 L=180nm W=10um
+
+M23 8 2 3 3 P1 L=180nm W=20um
+M24 8 2 6 6 N1 L=180nm W=10um
+
+M25 9 4 3 3 P1 L=180nm W=20um
+M26 9 4 6 6 N1 L=180nm W=10um
+
+M27 10 5 3 3 P1 L=180nm W=20um
+M28 10 5 6 6 N1 L=180nm W=10um
+
+M29 7 30 3 3 P1 L=180nm W=20um
+M30 7 30 6 6 N1 L=180nm W=10um
 
 vsupply 3 0 1.5V
 VSS 6 0 0V
-VA 2 0 pulse(0 1.5 20ns 50ps 50ps 20ns 40.1ns)
+VA 2 0 pulse(0 1.5 80.05ns 50ps 50ps 80.05ns 160.1ns)
 VB 4 0 pulse(0 1.5 40.05ns 50ps 50ps 40.05ns 80.1ns)
-VC 5 0 pulse(0 1.5 80.05ns 50ps 50ps 80.05ns 160.1ns)
+VC 5 0 pulse(0 1.5 20ns 50ps 50ps 20ns 40.1ns)
 cload 7 6 500f
+
+.tran 3ps 160.1ns
+ .control
+     run
+     write funcionTransistor.raw
+     meas tran iave INTEG i(vsupply) from=0ns to=160.1ns
+     let power = iave * 1.5 / 160.1ns
+     *how to access psu from here?
+     print power
+     set color0 = white, color1 = black, color2 = purple, color3 = orange, color4 = blue, color5 = red, color6 = red, color7 = red
+     set xbrushwidth = 4
+     plot V(2) V(4) V(5)
+     plot v(7)
+     plot i(vsupply)
+ .endc
+.end
 
 .MODEL N1 NMOS (                                LEVEL   = 49
 +VERSION = 3.1            TNOM    = 27             TOX     = 4.5E-9
@@ -99,22 +139,3 @@ cload 7 6 500f
 +PUB     = 1E-21          PVSAT   = -50            PETA0   = 9.968409E-5
 +PKETA   = -2.188083E-3    )
 *
-
-.tran 3ps 160.1ns
-
- .control
-      run
-      write funcionTransistor.raw
-      meas tran iave INTEG i(vsupply) from=0ns to=160.1ns
-      let power = iave * 1.5 / 160.1ns
-      *how to access psu from here?
-      print power
-      set color0 = white, color1 = black, color2 = purple, color3 = orange, color4 = blue, color5 = red, color6 = red, color7 = red
-      set xbrushwidth = 4
-      plot V(2) V(4) V(5) 
-      plot v(7)
-      plot i(vsupply)
- .endc
-	
-
-.end
