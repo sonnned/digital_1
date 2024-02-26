@@ -1,4 +1,17 @@
-*funcion
+* CMOS funcion compuertas Power Analysis 180nm   Voltaje 1.5V
+
+.param psu = 1.5
+vsupply 3 0 {psu}
+VA 11 0 pulse(0 {psu} 40.15ns 50ps 50ps 40.15ns 80.4ns)
+VB 10 0 pulse(0 {psu} 20.05ns 50ps 50ps 20.05ns 40.2ns)
+VC 17 0 pulse(0 {psu} 10ns 50ps 50ps 10ns 20.1ns)
+* VA 17 0 pulse(0 {psu} 10ns 50ps 50ps 10ns 20.1ns)
+* VB 10 0 pulse(0 {psu} 20.05ns 50ps 50ps 20.05ns 40.2ns)
+* VC 11 0 pulse(0 {psu} 40.15ns 50ps 50ps 40.15ns 80.4ns)
+* VD 12 0 pulse(0 {psu} 80.35ns 50ps 50ps 80.35ns 160.8ns)
+* VE 13 0 pulse(0 {psu} 160.75ns 50ps 50ps 160.75ns 321.6ns)
+* VF 14 0 pulse(0 {psu} 321.55ns 50ps 50ps 321.55ns 642.2ns)
+
 .SUBCKT NAND2 11 12 4 3
 M1 4 11 3 3 P1 L=180nm W=20um
 M2 4 12 3 3 P1 L=180nm W=20um
@@ -15,66 +28,62 @@ M5 5 9 6 6 N1 L=180nm W=10um
 M6 6 10 0 0 N1 L=180nm W=10um
 .ENDS NAND3
 
-
-.SUBCKT NAND4 8 9 10 12 4 3
-M1 4 8 3 3 P1 L=180nm W=20um
-M2 4 9 3 3 P1 L=180nm W=20um
-M3 4 10 3 3 P1 L=180nm W=20um
-M31 4 12 3 3 P1 L=180nm W=20um
-M4 4 8 5 5 N1 L=180nm W=10um
-M51 5 12 51 51 N1 L=180nm W=10um
-M5 51 9 6 6 N1 L=180nm W=10um
-M6 6 10 0 0 N1 L=180nm W=10um
-.ENDS NAND4
-
-
 .SUBCKT INV2 8 4 3
 M1 4 8 3 3 P1 L=180nm W=20um
 M2 4 8 0 0 N1 L=180nm W=10um
 .ENDS INV2
 
+
 .SUBCKT FUNCION 11 10 17 4 3
 X1 17 cn 3 INV2
 X2 10 bn 3 INV2
-X3 11 an 3 INV2
 
-X4 cn bn bncn 3 NAND2
+X3 17 bn cbn 3 NAND2
+X4 11 10 cn abcn 3 NAND3
 
-X5 an 10 cn anbcn 3 NAND3
-X6 11 10 17 abc 3 NAND3
-X7 an 10 17 anbc 3 NAND3
+X5 abn abcn 4 3 NAND2
 
-X8 bncn anbcn abc anbc 4 3 NAND4
-* X8 36 4 3 INV2
+
 .ENDS FUNCION
+
+* .SUBCKT SUMADOR1 17 10 11 23 27 3
+* X1 10 12 14 3 NAND2
+* X11 11 12 3 INV2
+* X2 13 11 15 3 NAND2
+* X12 10 13 3 INV2
+* X3 14 15 16 3 NAND2
+* X4 17 20 21 3 NAND2
+* X13 16 20 3 INV2
+* X5 18 16 22 3 NAND2
+* X14 17 18 3 INV2
+* X6 21 22 23 3 NAND2
+* X7 17 10 24 3 NAND2
+* X8 17 11 25 3 NAND2
+* X9 10 11 26 3 NAND2
+* X10 24 25 26 27 3 NAND3
+* .ENDS SUMADOR1
+
+* X20 0 17 12 15 30 3 SUMADOR1
+* X21 30 10 13 16 31 3 SUMADOR1
+* X22 31 11 14 27 18 3 SUMADOR1
 
 X20 11 10 17 7 3 FUNCION
 
+.options method=trap reltol=0.1m
+.tran 10p 80.4ns
+.save all @vsupply[p]
 
-.param psu = 1.5
-vsupply 3 0 {psu}
-VA 11 0 pulse(0 {psu} 40.15ns 50ps 50ps 40.15ns 80.4ns)
-VB 10 0 pulse(0 {psu} 20.05ns 50ps 50ps 20.05ns 40.2ns)
-VC 17 0 pulse(0 {psu} 10ns 50ps 50ps 10ns 20.1ns)
-cload 7 6 500f
+.control
+  run        
+	 * plot V(17) V(10) V(11) V(12) V(13) V(14)
+  
+	* plot V(27) V(18) V(15) V(16)
+  plot V(7)
+.endc
 
-.tran 3ps 80.1ns
- .control
-     run
-     write funcionTransistor.raw
-     meas tran iave INTEG i(vsupply) from=0ns to=160.1ns
-     let power = iave * 1.5 / 160.1ns
-     *how to access psu from here?
-     print power
-     set color0 = white, color1 = black, color2 = purple, color3 = orange, color4 = blue, color5 = red, color6 = red, color7 = red
-     set xbrushwidth = 4
-     plot V(2) V(4) V(5)
-     plot v(7)
-     plot i(vsupply)
- .endc
-.end
 
-.MODEL N1 NMOS (                                LEVEL   = 49
+
+.MODEL N1  NMOS (                                LEVEL   = 49
 +VERSION = 3.1            TNOM    = 27             TOX     = 4.5E-9
 +XJ      = 1E-7           NCH     = 2.3549E17      VTH0    = 0.3026413
 +K1      = 0.4866067      K2      = 1.715373E-3    K3      = 1E-3
@@ -111,7 +120,7 @@ cload 7 6 500f
 +PUB     = 0              PVSAT   = 958.2202204    PETA0   = 6.045336E-5
 +PKETA   = 2.515297E-3     )
 *
-.MODEL P1 PMOS (                                LEVEL   = 49
+.MODEL P1    PMOS (                                LEVEL   = 49
 +VERSION = 3.1            TNOM    = 27             TOX     = 4.5E-9
 +XJ      = 1E-7           NCH     = 4.1589E17      VTH0    = -0.3913037
 +K1      = 0.553856       K2      = 0.0225982      K3      = 0
@@ -147,4 +156,8 @@ cload 7 6 500f
 +LKETA   = -0.0113269     PU0     = -0.499965      PUA     = 4.03341E-12
 +PUB     = 1E-21          PVSAT   = -50            PETA0   = 9.968409E-5
 +PKETA   = -2.188083E-3    )
-*
+
+
+.END
+
+
