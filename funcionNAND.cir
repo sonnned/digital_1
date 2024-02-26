@@ -75,7 +75,7 @@ X20 11 10 17 7 3 FUNCION
 
 .control
   run        
-	 plot V(17) V(10) V(11) 
+	 * plot V(17) V(10) V(11) V(12) V(13) V(14)
   
 	* plot V(27) V(18) V(15) V(16)
   plot V(7)
